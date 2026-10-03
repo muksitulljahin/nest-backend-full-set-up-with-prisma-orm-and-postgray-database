@@ -10,11 +10,6 @@ import {
 export class IsBDPhoneNumberConstraint implements ValidatorConstraintInterface {
   validate(phoneNumber: any, args: ValidationArguments) {
     if (typeof phoneNumber !== 'string') return false;
-
-    // Pattern matches:
-    // +8801XXXXXXXXX
-    // 01XXXXXXXXX
-    // 1XXXXXXXXX
     const bdPhoneRegex = /^(?:\+880|0)?1\d{9}$/;
 
     return bdPhoneRegex.test(phoneNumber);
