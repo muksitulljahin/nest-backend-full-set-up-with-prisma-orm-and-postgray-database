@@ -10,7 +10,7 @@ const envConfig = {
 
   ENCRYPTION_KEY: process.env.ENCRYPTION_KEY as string,
   FRONT_ENCRYPTION_KEY: process.env.FRONT_ENCRYPTION_KEY as string,
-  DATABASE_URI: process.env.DATABASE_URI as string,
+  DATABASE_URL: process.env.DATABASE_URL as string,
   SWAGGER_USER: process.env.SWAGGER_USER as string,
   SWAGGER_PASSWORD: process.env.SWAGGER_PASSWORD as string,
   BACKEND_BASE_URL: process.env.BACKEND_BASE_URL as string,

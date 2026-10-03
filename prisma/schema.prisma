@@ -1,0 +1,28 @@
+// Prisma schema for PostgreSQL.
+// Docs: https://pris.ly/d/prisma-schema
+// The database URL lives in prisma.config.ts (Prisma 7+).
+
+generator client {
+  provider     = "prisma-client"
+  output       = "../src/generated/prisma"
+  moduleFormat = "cjs"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Image {
+  id         String    @id @default(uuid())
+  url        String
+  key        String
+  filename   String?
+  caption    String?
+  mimeType   String?
+  size       Int?
+  uploadedAt DateTime?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  @@map("images")
+}

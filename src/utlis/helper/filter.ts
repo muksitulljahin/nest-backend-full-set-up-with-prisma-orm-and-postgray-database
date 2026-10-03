@@ -1,5 +1,12 @@
+type InsensitiveContains = { contains: string; mode: 'insensitive' };
+
+const containsInsensitive = (value: string): InsensitiveContains => ({
+  contains: value,
+  mode: 'insensitive',
+});
+
 /**
- * Builds a search filter using $and of word matches or simple $or matches against the specified fields.
+ * Builds a Prisma `where` search filter: AND of per-word matches, or a simple OR match against the specified fields.
  */
 export function buildSearchFilter(
   search?: string,
@@ -18,17 +25,13 @@ export function buildSearchFilter(
       return {};
     }
     return {
-      $and: words.map((word) => {
-        const wordRegex = { $regex: word, $options: 'i' };
-        return {
-          $or: fields.map((field) => ({ [field]: wordRegex })),
-        };
-      }),
+      AND: words.map((word) => ({
+        OR: fields.map((field) => ({ [field]: containsInsensitive(word) })),
+      })),
     };
   } else {
-    const wordRegex = { $regex: search, $options: 'i' };
     return {
-      $or: fields.map((field) => ({ [field]: wordRegex })),
+      OR: fields.map((field) => ({ [field]: containsInsensitive(search) })),
     };
   }
 }
@@ -50,10 +53,15 @@ export function buildLocationFilter(locationQuery: {
 }
 
 /**
- * Merges search filter and location filter into a single query object
+ * Merges search filter and location filter into a single Prisma `where` object
  */
 export function buildQueryFilter(
-  query: { search?: string; district?: string; upazila?: string; thana?: string },
+  query: {
+    search?: string;
+    district?: string;
+    upazila?: string;
+    thana?: string;
+  },
   searchFields: string[],
   options: { splitWords?: boolean } = {},
 ): any {

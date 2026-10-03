@@ -1,10 +1,10 @@
 import { BadRequestException } from '@nestjs/common';
 
 /**
- * Generates an $or filter for MongoDB queries based on email or phoneNumber.
+ * Generates an OR filter for Prisma queries based on email or phoneNumber.
  * @param email - The user's email address
  * @param phoneNumber - The user's phone number
- * @returns An array for the $or operator
+ * @returns An array for the Prisma `OR` operator, e.g. `where: { OR: getAuthIdentifierFilter(email, phone) }`
  */
 export const getAuthIdentifierFilter = (
   email?: string,

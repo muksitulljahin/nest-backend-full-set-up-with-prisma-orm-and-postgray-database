@@ -3,14 +3,13 @@ import {
   NotFoundException,
   InternalServerErrorException,
 } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { PrismaService } from 'src/libs/prisma/prisma.service';
 import { Image } from './entities/image.entity';
 import { deleteFromR2, uploadToR2 } from 'src/utlis/cloudflare/r2Storage';
 
 @Injectable()
 export class ImageService {
-  constructor(@InjectModel(Image.name) private imageModel: Model<Image>) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   async create(file: Express.Multer.File, caption?: string): Promise<Image> {
     try {
@@ -23,19 +22,20 @@ export class ImageService {
       console.log(`[ImageService] Uploaded to R2: ${uploadResult.key}`);
 
       // 2. Save metadata to DB
-      const newImage = new this.imageModel({
-        url: uploadResult.url,
-        key: uploadResult.key,
-        filename: uploadResult.filename,
-        mimeType: uploadResult.mimetype,
-        size: uploadResult.filesize,
-        caption: caption,
-        uploadedAt: new Date(),
+      const savedImage = await this.prisma.image.create({
+        data: {
+          url: uploadResult.url,
+          key: uploadResult.key,
+          filename: uploadResult.filename,
+          mimeType: uploadResult.mimetype,
+          size: uploadResult.filesize,
+          caption: caption,
+          uploadedAt: new Date(),
+        },
       });
 
-      const savedImage = await newImage.save();
       console.log(
-        `[ImageService] Saved image metadata to DB: ${savedImage._id}`,
+        `[ImageService] Saved image metadata to DB: ${savedImage.id}`,
       );
       return savedImage;
     } catch (error) {
@@ -45,11 +45,11 @@ export class ImageService {
   }
 
   async findAll(): Promise<Image[]> {
-    return this.imageModel.find().sort({ createdAt: -1 }).exec();
+    return this.prisma.image.findMany({ orderBy: { createdAt: 'desc' } });
   }
 
   async findOne(id: string): Promise<Image> {
-    const image = await this.imageModel.findById(id).exec();
+    const image = await this.prisma.image.findUnique({ where: { id } });
     if (!image) {
       throw new NotFoundException(`Image with ID ${id} not found`);
     }
@@ -65,6 +65,6 @@ export class ImageService {
     }
 
     // 2. Delete from DB
-    await this.imageModel.findByIdAndDelete(id).exec();
+    await this.prisma.image.delete({ where: { id } });
   }
 }

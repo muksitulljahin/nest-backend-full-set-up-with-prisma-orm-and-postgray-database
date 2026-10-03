@@ -1,18 +1,11 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { MongooseModule } from '@nestjs/mongoose';
-
-import envConfig from './config/config';
+import { PrismaModule } from './libs/prisma/prisma.module';
 
 @Module({
-  imports: [
-    MongooseModule.forRoot(envConfig.DATABASE_URI, {
-      dbName: 'data base name',
-    }),
-
-  ],
+  imports: [PrismaModule],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {}

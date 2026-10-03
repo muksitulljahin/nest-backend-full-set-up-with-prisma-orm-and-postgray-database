@@ -66,20 +66,20 @@ export function shuffleAndPrioritizeData<T>(
   const otherMatches: T[] = [];
 
   data.forEach((item: any) => {
-    // Check for populated location _id string or plain string code comparison
+    // Check for populated location id string or plain string code comparison
     const itemThana =
       item.thana && typeof item.thana === 'object'
-        ? (item.thana._id || item.thana.code || '').toString()
+        ? (item.thana.id || item.thana.code || '').toString()
         : (item.thana || '').toString();
 
     const itemUpazila =
       item.upazila && typeof item.upazila === 'object'
-        ? (item.upazila._id || item.upazila.code || '').toString()
+        ? (item.upazila.id || item.upazila.code || '').toString()
         : (item.upazila || '').toString();
 
     const itemDistrict =
       item.district && typeof item.district === 'object'
-        ? (item.district._id || item.district.code || '').toString()
+        ? (item.district.id || item.district.code || '').toString()
         : (item.district || '').toString();
 
     if (thana && itemThana === thana.toString()) {

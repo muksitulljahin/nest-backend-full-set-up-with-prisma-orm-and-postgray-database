@@ -1,36 +1,38 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
-import { Document } from 'mongoose';
+import type { Image as PrismaImage } from 'src/generated/prisma/client';
 
-@Schema({ timestamps: true })
-export class Image extends Document {
+/**
+ * Swagger response shape for an Image row.
+ * DB model lives in prisma/schema.prisma (model Image).
+ */
+export class Image implements PrismaImage {
   @ApiProperty()
-  @Prop({ required: true })
+  id: string;
+
+  @ApiProperty()
   url: string;
 
   @ApiProperty()
-  @Prop({ required: true })
   key: string;
 
-  @ApiProperty()
-  @Prop()
-  filename: string;
+  @ApiProperty({ nullable: true })
+  filename: string | null;
+
+  @ApiProperty({ nullable: true })
+  caption: string | null;
+
+  @ApiProperty({ nullable: true })
+  mimeType: string | null;
+
+  @ApiProperty({ nullable: true })
+  size: number | null;
+
+  @ApiProperty({ nullable: true })
+  uploadedAt: Date | null;
 
   @ApiProperty()
-  @Prop()
-  caption: string;
+  createdAt: Date;
 
   @ApiProperty()
-  @Prop()
-  mimeType: string;
-
-  @ApiProperty()
-  @Prop()
-  size: number;
-
-  @ApiProperty()
-  @Prop()
-  uploadedAt: Date;
+  updatedAt: Date;
 }
-
-export const ImageSchema = SchemaFactory.createForClass(Image);

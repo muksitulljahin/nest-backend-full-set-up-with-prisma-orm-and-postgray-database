@@ -3,7 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import envConfig from 'src/config/config';
 
 export interface UserPayload {
-  _id: string;
+  id: string;
   email: string | undefined;
   firstName?: string;
   lastName?: string;
@@ -24,7 +24,7 @@ export class TokenService {
    */
   async generateToken(user: UserPayload): Promise<TokenPair> {
     const payload = {
-      sub: user._id,
+      sub: user.id,
       email: user.email,
       role: user.role,
       firstName: user.firstName,
@@ -57,7 +57,7 @@ export class TokenService {
       // After 3 days or more, if the refresh token is still valid,
       // we generate a new pair of tokens.
       const user: UserPayload = {
-        _id: payload.sub,
+        id: payload.sub,
         email: payload.email,
         role: payload.role,
         firstName: payload.firstName,

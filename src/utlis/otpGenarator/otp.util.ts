@@ -1,4 +1,3 @@
-import { Model } from 'mongoose';
 import envConfig from 'src/config/config';
 
 /**
@@ -16,14 +15,26 @@ export const generateOtp = (): string => {
 // };
 
 /**
- * Globally verify OTP against a Mongoose model.
+ * Any Prisma model delegate (e.g. `prisma.user`) that supports findFirst.
  */
-export const globalVerifyOtp = async <T>(
-  model: Model<T>,
+type FindFirstDelegate = {
+  findFirst(args: any): Promise<any>;
+};
+
+/**
+ * Globally verify OTP against a Prisma model.
+ * The model must have `otpCode` (String) and `otpExpiresAt` (DateTime) columns.
+ *
+ * @example globalVerifyOtp(this.prisma.user, otp)
+ */
+export const globalVerifyOtp = async (
+  model: FindFirstDelegate,
   otp: string,
 ): Promise<any> => {
-  return await model.findOne({
-    'otp.code': otp,
-    'otp.expiresAt': { $gt: new Date() },
+  return await model.findFirst({
+    where: {
+      otpCode: otp,
+      otpExpiresAt: { gt: new Date() },
+    },
   });
 };

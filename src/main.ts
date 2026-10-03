@@ -1,9 +1,8 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { Logger, ValidationPipe } from '@nestjs/common';
-import { Connection } from 'mongoose';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { getConnectionToken } from '@nestjs/mongoose';
+import { PrismaExceptionFilter } from './libs/prisma/prisma-exception.filter';
 import basicAuth from 'express-basic-auth';
 import envConfig from './config/config';
 import axios from 'axios';
@@ -46,8 +45,8 @@ async function main() {
       credentials: true,
     });
 
-    // MongoDB connection log
-    const connection = app.get<Connection>(getConnectionToken());
+    // Map Prisma errors (duplicate, not found, FK) to HTTP responses
+    app.useGlobalFilters(new PrismaExceptionFilter());
 
     const swaggerConfig = new DocumentBuilder()
       .setTitle('setup API')
@@ -81,12 +80,6 @@ async function main() {
     //     10 * 60 * 1000,
     //   ); // Ping every 10 minutes
     // }
-
-    if (connection) {
-      Logger.log(`MongoDB connection successful`);
-    } else {
-      Logger.log('MongoDB connection failed');
-    }
   } catch (error) {
     Logger.error(error);
   }
