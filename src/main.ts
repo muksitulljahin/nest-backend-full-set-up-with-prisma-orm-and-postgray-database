@@ -5,7 +5,6 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { PrismaExceptionFilter } from './libs/prisma/prisma-exception.filter';
 import basicAuth from 'express-basic-auth';
 import envConfig from './config/config';
-import axios from 'axios';
 
 // import * as dns from 'dns';
 
@@ -63,23 +62,6 @@ async function main() {
       Logger.log(`Server is running at http://localhost:${envConfig.PORT}`);
     });
 
-    // Self-ping to prevent Render from going to sleep
-    // const backendUrl = envConfig.BACKEND_BASE_URL;
-    // if (backendUrl) {
-    //   setInterval(
-    //     async () => {
-    //       try {
-    //         await axios.get(`${backendUrl}/v1`);
-    //         Logger.log(
-    //           `[Self-Ping] Successfully pinged backend at ${backendUrl}/v1`,
-    //         );
-    //       } catch (error: any) {
-    //         Logger.warn(`[Self-Ping] Failed to ping backend: ${error.message}`);
-    //       }
-    //     },
-    //     10 * 60 * 1000,
-    //   ); // Ping every 10 minutes
-    // }
   } catch (error) {
     Logger.error(error);
   }

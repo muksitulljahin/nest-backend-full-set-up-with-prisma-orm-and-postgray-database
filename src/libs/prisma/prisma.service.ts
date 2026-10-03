@@ -22,12 +22,15 @@ export class PrismaService
   }
 
   async onModuleInit() {
+
     try {
       await this.$connect();
+      // Test actual database connectivity with a ping query
+      await this.$queryRaw`SELECT 1`;
       this.logger.log('PostgreSQL connection successful');
     } catch (error) {
-      this.logger.error('PostgreSQL connection failed', error);
-      throw error;
+      const msg = error instanceof Error ? error.message : String(error);
+      this.logger.error(`PostgreSQL connection failed: ${msg}`);
     }
   }
 
