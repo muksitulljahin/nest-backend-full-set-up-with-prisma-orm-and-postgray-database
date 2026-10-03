@@ -1,4 +1,5 @@
 import { FileValidator } from '@nestjs/common';
+import 'multer';
 
 /**
  * Custom image type validator that checks file.mimetype directly.

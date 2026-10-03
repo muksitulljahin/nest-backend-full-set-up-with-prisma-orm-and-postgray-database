@@ -22,6 +22,7 @@ import {
   ApiBody,
 } from '@nestjs/swagger';
 import type { Response } from 'express';
+import 'multer';
 import { ImageService } from './image.service';
 import { Image } from './entities/image.entity';
 import { successHandler } from 'src/utlis/Handler/successHandler';

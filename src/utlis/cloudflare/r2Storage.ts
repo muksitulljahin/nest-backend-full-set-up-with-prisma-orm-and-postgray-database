@@ -8,6 +8,7 @@ import {
 import { ErrorHandler } from '../Handler/errorHandler.js';
 import { HttpStatus } from 'http-status-string';
 import { v4 as uuidv4 } from 'uuid';
+import 'multer';
 import envConfig from 'src/config/config';
 
 export interface R2UploadResult {

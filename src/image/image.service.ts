@@ -5,6 +5,7 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from 'src/libs/prisma/prisma.service';
 import { Image } from './entities/image.entity';
+import 'multer';
 import { deleteFromR2, uploadToR2 } from 'src/utlis/cloudflare/r2Storage';
 
 @Injectable()
